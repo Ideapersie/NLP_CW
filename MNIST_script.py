@@ -27,20 +27,34 @@ x_test = x_test.reshape(x_test.shape[0], 28, 28, 1)
 
 # 3. Build Neural Network
 net = Sequential()
-net.add(Conv2D(filters=32, kernel_size=(5,5), activation='relu', input_shape=(28,28,1)))
 
 # Split the network into 3 main blocks
+net.add(Conv2D(filters=32, kernel_size=(5,5), activation='relu', input_shape=(28,28,1)))
+net.add(BatchNormalization())
+net.add(Conv2D(filters=32, kernel_size=(5,5), activation='relu', padding='same'))
+net.add(BatchNormalization())
+net.add(MaxPool2D(pool_size=(2, 2)))
+# Light dropout early on
+net.add(Dropout(0.25))
 
-net.add(MaxPool2D(pool_size=(2,2)))
-net.add(Conv2D(32, (3,3), activation='relu'))
-net.add(MaxPool2D(pool_size=(2,2)))
+# Block 2 
+net.add(Conv2D(64, kernel_size=(3,3), activation='relu', padding='same'))
+net.add(BatchNormalization())
+net.add(Conv2D(64, kernel_size=(3,3), activation='relu', padding='same'))
+net.add(BatchNormalization())
+net.add(MaxPool2D(pool_size=(2, 2)))
+# Light dropout early on
+net.add(Dropout(0.25))
+
+# Classification black 
 net.add(Flatten())
 net.add(Dense(256, activation='relu'))
-net.add(Dropout(rate=0.5))
+net.add(BatchNormalization())
+net.add(Dropout(rate=0.5)) # Heavy dropout before classification
 net.add(Dense(10, activation='softmax'))
 
-# 4. Compile network
 
+# 4. Compile network
 net.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 # 5. Data Augmentation, generalize against raw data + handle slight tilts
@@ -57,10 +71,15 @@ datagen.fit(x_train)
 
 
 # 6. Train network 
-history = net.fit(datagen.flow(x_train, y_train, batch_size=256), validation_data=(x_test, y_test), epochs=20)
+history = net.fit(datagen.flow(x_train, y_train, batch_size=256), 
+                  validation_data=(x_test, y_test), 
+                  epochs=20,
+                  workers=4,
+                  use_multiprocessing=True  
+                )
 
 # 7. Save network
-net.save("my_NN_fillmode.h5")
+net.save("my_NN_3blocks.h5")
 print("Model saved as my_NN.h5")
 
 # 8. Evaluate model accuracy 
