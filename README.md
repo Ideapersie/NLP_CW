@@ -17,11 +17,10 @@ To run this project, you will need Python 3.x installed along with the following
 * `numpy`
 * `matplotlib`
 
-You can install the dependencies using:
+You can install all dependencies easily using:
 ```bash
-pip install tensorflow numpy matplotlib
+pip install -r requirements.txt
 ```
-
 ## Dataset Requirements
 **MNIST**: The MNIST dataset is downloaded automatically via tensorflow.keras.datasets.mnist when you run the scripts.
 
@@ -31,11 +30,10 @@ Download the EMNIST dataset (idx format).
 
 Extract it and place the files inside a folder named archive/emnist_source_files in the root directory.
 
-###Usage
+### Usage
 1. Train the Model
 To train the CNN from scratch, run the training script:
 
-Bash
 ```bash
 python MNIST_script.py
 ```
@@ -44,7 +42,6 @@ This will download the MNIST data, train the model for 20 epochs using data augm
 2. Evaluate the Model
 Once you have a trained model (.h5 file), you can evaluate it and generate the misclassification reports:
 
-Bash
 ```bash
 python MNIST_testscript.py
 ```

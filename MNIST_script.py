@@ -73,13 +73,11 @@ datagen.fit(x_train)
 # 6. Train network 
 history = net.fit(datagen.flow(x_train, y_train, batch_size=256), 
                   validation_data=(x_test, y_test), 
-                  epochs=20,
-                  workers=4,
-                  use_multiprocessing=True  
+                  epochs=20
                 )
 
 # 7. Save network
-net.save("my_NN_3blocks.h5")
+net.save("my_NN_final.h5")
 print("Model saved as my_NN.h5")
 
 # 8. Evaluate model accuracy 
